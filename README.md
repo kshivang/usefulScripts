@@ -23,7 +23,7 @@ Or `brew tap homebrew/python` and then `brew install <formula>`.
 ### How do I run these script?
 `chmod a+x (yourscriptname)` and then `./(yourscriptname)`
 
-For nicer way to run script see buttom
+For nicer way to run script see bottom
 
 ## bash2048.sh
 
@@ -32,7 +32,7 @@ This is bash version 2048 game
 ### How do I run these script?
 `chmod a+x (yourscriptname)` and then `./(yourscriptname)`
 
-For nicer way to run script see buttom
+For nicer way to run script see bottom
 
 ## countDown
 
@@ -41,7 +41,7 @@ This is bash script to countDown in mac
 ### How do I run these script?
 `chmod a+x (yourscriptname)` and then `./(yourscriptname)`
 
-For nicer way to run script see buttom
+For nicer way to run script see bottom
 
 ## fibonacci
 
@@ -50,7 +50,7 @@ This is bash script to produce fibonacci number. This return nth term of fibonac
 ### How do I run these script?
 `chmod a+x (yourscriptname)` and then `./(yourscriptname)`
 
-For nicer way to run script see buttom
+For nicer way to run script see bottom
 
 ## maxInteger
 
