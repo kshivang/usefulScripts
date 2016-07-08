@@ -8,7 +8,7 @@ I documented this for mac users only. Other unix user may also run these script 
 
 This is python script for automatically login to fortigate iitk server while using fortigate ip.
 
-## Prereqisite
+## Prerequisite
 
 Install python
 ### How do I install these formulæ?
