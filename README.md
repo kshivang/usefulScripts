@@ -6,7 +6,8 @@ I documented this for mac users only. Other unix user may also run these script 
 
 ## fl
 
-This is python script for automatically login to fortigate iitk server while using fortigate ip.
+This is a python script for automatically login to fortigate iitk server while using fortigate ip. 
+If you run this script you will never have your fortigate login problem in browser. You can also manupulate script with your user name and password, and cron task
 
 ## Prerequisite
 
