@@ -20,16 +20,14 @@ Or `brew tap homebrew/python` and then `brew install <formula>`.
 `pip install <package>`
 
 ### How do I run these script?
-`chmod a+x (yourscriptname)`
-`./(yourscriptname)`
+`chmod a+x (yourscriptname)` and then `./(yourscriptname)`
 
 ## bash2048.sh
 
 This is bash version 2048 game
 
 ### How do I run these script?
-`chmod a+x (yourscriptname)`
-`./(yourscriptname)`
+`chmod a+x (yourscriptname)` and then `./(yourscriptname)`
 
 
 ## countDown
@@ -37,16 +35,14 @@ This is bash version 2048 game
 This is bash script to countDown in mac
 
 ### How do I run these script?
-`chmod a+x (yourscriptname)`
-`./(yourscriptname)`
+`chmod a+x (yourscriptname)` and then `./(yourscriptname)`
 
 ## fibonacci
 
 This is bash script to produce fibonacci number
 
 ### How do I run these script?
-`chmod a+x (yourscriptname)`
-`./(yourscriptname)`
+`chmod a+x (yourscriptname)` and then `./(yourscriptname)`
 
 ## maxInteger
 
@@ -54,8 +50,7 @@ This is a bash script to calculate maximum value that a variable can hold in  ba
 There could be lots of way of doing this but this one is quite efficient.
 
 ### How do I run these script?
-`chmod a+x (yourscriptname)`
-`./(yourscriptname)`
+`chmod a+x (yourscriptname)`and then `./(yourscriptname)`
 
 
 ## nicer way to running script in unix
