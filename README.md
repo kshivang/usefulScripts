@@ -40,7 +40,7 @@ This is bash script to countDown in mac
 
 ## fibonacci
 
-This is bash script to produce fibonacci number
+This is bash script to produce fibonacci number. This return nth term of fibonacci number
 
 ### How do I run these script?
 `chmod a+x (yourscriptname)` and then `./(yourscriptname)`
