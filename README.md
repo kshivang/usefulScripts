@@ -62,7 +62,9 @@ Now after creating your script you can run it, just by fixing permission by chmo
 `chmod a+x (yoursriptnam)` and running ` $ youscriptname` in terminal.
 
 For more nicer way we can add few lines to text editor rc like for vim add
+
 `au BufWritePost * if getline(1) =~ "^#!" | if getline(1) =~ "/bin/" | silent !chmod +x <afile> `
+
 to automatically fix permission when a script file is saved
 
 
