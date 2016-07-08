@@ -59,9 +59,14 @@ Make a folder in home where you can store all your script
 
 `mkdir ~/(desiredNameForFolder)`
 
-Add this folder to path variable by adding this line to your .bash_profile and source you bash (if you use other shell add this line to that shell rc)
+Add this folder to path variable by adding this line to your .bash_profile 
 
 `PATH = "$PATH:~/(desiredNameForFolder)`
+
+and source your bash by (if you use other shell, then add this line to that shell rc)
+
+`source .bash_profile` Or restart terminal app. (if you use iterm or xterm, then restart that as well)
+
 
 Now after creating your script you can run it, just by fixing permission by chmod like
 
