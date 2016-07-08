@@ -1,0 +1,21 @@
+#!/bin/bash
+
+toward(){
+    m=$1
+    n=1
+    a=0
+    while [ $(($n+$m)) -gt 0 ]; do
+        a=$n
+        n=$(($n+$n))
+    done
+    echo $(($a+$m))
+}
+almost(){
+    a=1
+    while [ $(($a+1)) -gt 0 ]; do
+        a=$(toward $a)
+        #a=$(($a+1))
+    done
+    echo $a
+}
+echo $(almost)

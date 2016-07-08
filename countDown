@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Print to stdout
+re='^[0-9]+$'
+if [ -z "$1" ]; then
+    read -p "Choose no. of Countdown--" x
+    if ! [[ $x =~ $re ]] ; then
+       echo "error: Not a number" >&2; exit 1
+    fi
+else
+    if ! [[ $1 =~ $re ]] ; then
+       echo "error: Not a number" >&2; exit 1
+    fi
+    x=$1
+fi
+while [  $x -gt 0 ]; do
+    say "$x"
+    if [  $x -eq 1 ]; then
+        say "Start"
+    fi
+    let x=x-1
+done
+exit 0

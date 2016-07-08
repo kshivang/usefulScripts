@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd ~/Desktop/Counter\ Strike/Counter\ Strike/
+wine hl.exe -game cstrike
