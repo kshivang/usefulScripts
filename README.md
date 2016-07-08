@@ -55,10 +55,16 @@ There could be lots of way of doing this but this one is quite efficient.
 
 ## nicer way to running script in unix
 
+Make a folder in home where you can store all your script
+
 `mkdir ~/(desiredNameForFolder)`
-Add this line to your .bash_profile
-`Path = "$PATH:~/(desiredNameForFolder)`
+
+Add this folder to path variable by adding this line to your .bash_profile and source you bash (if you use other shell add this line to that shell rc)
+
+`PATH = "$PATH:~/(desiredNameForFolder)`
+
 Now after creating your script you can run it, just by fixing permission by chmod like
+
 `chmod a+x (yoursriptnam)` and running ` $ youscriptname` in terminal.
 
 For more nicer way we can add few lines to text editor rc like for vim add
