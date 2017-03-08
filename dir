@@ -1,0 +1,235 @@
+#!/bin/bash
+
+#Colors
+RESTORE=$(echo -en '\033[0m')
+RED=$(echo -en '\033[00;31m')
+GREEN=$(echo -en '\033[00;32m')
+YELLOW=$(echo -en '\033[00;33m')
+BLUE=$(echo -en '\033[00;34m')
+MAGENTA=$(echo -en '\033[00;35m')
+PURPLE=$(echo -en '\033[00;35m')
+CYAN=$(echo -en '\033[00;36m')
+LIGHTGRAY=$(echo -en '\033[00;37m')
+LRED=$(echo -en '\033[01;31m')
+LGREEN=$(echo -en '\033[01;32m')
+LYELLOW=$(echo -en '\033[01;33m')
+LBLUE=$(echo -en '\033[01;34m')
+LMAGENTA=$(echo -en '\033[01;35m')
+LPURPLE=$(echo -en '\033[01;35m')
+LCYAN=$(echo -en '\033[01;36m')
+WHITE=$(echo -en '\033[01;37m')
+BLACK=$(echo -en '\033[00;30m')
+
+bRED=$(echo -en '\033[48;2;255;0;0m')
+bGREEN=$(echo -en '\033[48;2;0;255;0m')
+bBLUE=$(echo -en '\033[48;2;66;122;179m')
+bRESTORE=$(echo -en '\033[48;2;0;0;0m')
+
+set -o vi
+bind '"jk":"\e"'
+
+#Default Config
+DEFAULT="fd"
+history -r ~/.dir_history
+
+#Parse command
+function lookFor {
+  local CONTENT
+  case "$1" in
+    "h" | "hidden")
+      DEFAULT=$1
+      CONTENT=$(find . -maxdepth 1 -name '.*' | sed 's/\.\///g' | sed 's/\ /\\\_/g')
+      selection dir ${CONTENT}
+      ;;
+    "d" | "directory")
+      DEFAULT=$1
+      CONTENT=$(find . -maxdepth 1 -type d | sed 's/\.\///g' | sed 's/\ /\\\_/g')
+      selection dir ${CONTENT}
+      ;;
+    "hd" | "hiddenDirectory")
+      DEFAULT=$1
+      CONTENT=$(find . -maxdepth 1 -name '.*' -type d | sed 's/\.\///g' | sed 's/\ /\\\_/g')
+      selection dir ${CONTENT}
+      ;;
+    "f" | "file")
+      DEFAULT=$1
+      CONTENT=$(find . -maxdepth 1 -type f | sed 's/\.\///g' | sed 's/\ /\\\_/g')
+      selection dir ${CONTENT}
+      ;;
+    "hf" | "hiddenFile")
+      DEFAULT=$1
+      CONTENT=$(find . -maxdepth 1 -name '.*' -type f | sed 's/\.\///g' | sed 's/\ /\\\_/g')
+      selection dir ${CONTENT}
+      ;;
+    "" | "n"| "fd" | "fileDirectory")
+      DEFAULT=$1
+      #CONTENT=$(find . -maxdepth 1 -name '[^.]*' | sed 's/\.\///g' | sed 's/\ /\\\_/g')
+      shopt -u nullglob dotglob
+      CONTENT=(*)
+      CONTENT=${CONTENT[@]// /"\_"}
+      selection dir ${CONTENT}
+      ;;
+    "a" | "all" )
+      DEFAULT=$1
+      #CONTENT=$(find . -maxdepth 1 -name '*' | sed 's/\.\///g' | sed 's/\ /\\\_/g')
+      #Better performance
+      shopt -s nullglob dotglob
+      CONTENT=(*)
+      CONTENT=${CONTENT[@]// /"\_"}
+      selection dir $CONTENT
+      ;;
+    "config")
+      vim ~/personalScript/dir
+      lookFor ${DEFAULT}
+      ;;
+    "s" | "z" |"zsh")
+      exit 0
+      ;;
+    "q" | ":q" | "exit" | "exit()" | "quit")
+      kill -9 $PPID
+      ;;
+    "dir")
+      if [ -n ${2} ] && [ $(checkFlag ${2}) ]; then
+        DEFAULT=${2}
+      fi
+      lookFor ${DEFAULT}
+      ;;
+    "cd")
+      eval "${@}"
+      lookFor ${DEFAULT}
+      ;;
+    !*) 
+      printf $BLUE
+      eval "${1:1} ${@:2}"
+      ;;
+    *) 
+      printf $BLUE
+      eval "${@}"
+      selection cmd
+      ;;
+  esac
+}
+
+function selection {
+  if [[ $1 == dir ]]; then
+    CONTENTS=(${@:2})
+
+    while IFS="" read -e -r -p "$(
+    cols=$(tput cols)
+    i=0
+    if [[ ${#CONTENTS[@]} == 0 ]]; then
+      echo "${LRED}No content here!"
+    fi
+    for NAME in "${CONTENTS[@]}"; do
+      NAME=${NAME//"\_"/ }
+      if [[ -d ${NAME} ]]; then
+        if [[ ${NAME} == .* ]]; then
+          COLOR=${LCYAN}
+        else
+          COLOR=${LBLUE}
+        fi
+      elif [[ -f ${NAME} ]]; then
+        if [[ ${NAME} == .* ]]; then
+          COLOR=${PURPLE}
+        else
+          COLOR=${GREEN}
+        fi
+      else
+        COLOR=${RED}
+      fi
+      printf "$YELLOW%-3s : $COLOR%-30s" "$((++i))" "$NAME"
+      if [ $((i%(cols/40))) -eq 0 ]; then
+        printf "\n"
+      else
+        printf "\t"
+        if [ ${i} -eq ${#CONTENTS[@]} ]; then
+          printf "\n"
+        fi
+      fi
+    done
+    echo ${BLUE} ${USER}${RED}@${GREEN}${HOSTNAME//".local"/} ${BLACK}${bBLUE} ${PWD/#$HOME/\~} ${BLUE}
+    echo " ${LBLUE}❯❯ ${RESTORE}"
+    )" SELECTION; do
+      #echo "$SELECTION" >> ~/.dir_history
+      #history -n 
+      history -s "$SELECTION"
+      NUMBER_ONLY='^[0-9]*$'
+      if [[ -n ${SELECTION} ]] && [[ ${SELECTION} =~ ${NUMBER_ONLY} ]]; then
+        if [ ${SELECTION} -eq 0 ]; then
+          exit 0
+        fi
+        SELECTED_CONTENT="${CONTENTS[$((SELECTION-1))]//"\_"/ }"
+        if [ -z "$SELECTED_CONTENT" ]; then
+          echo "This is not a valid selection"
+        else
+          echo "You have selected '$SELECTED_CONTENT'"
+          if [[ -d ${SELECTED_CONTENT} ]]; then
+            cd "${SELECTED_CONTENT}"
+            lookFor ${DEFAULT}
+          else
+            vim "${SELECTED_CONTENT}"
+            lookFor ${DEFAULT}
+          fi
+        fi
+      elif [[ -d ${SELECTION} ]]; then
+        cd "${SELECTION}"
+        lookFor ${DEFAULT}
+      elif [[ -f ${SELECTION} ]]; then
+        vim "${SELECTION}"
+        lookFor ${DEFAULT}
+      else
+        lookFor ${SELECTION}
+      fi
+    done
+  else
+    while IFS="" read -e -r -p "$(
+    echo ${BLUE} ${USER}${RED}@${GREEN}${HOSTNAME//".local"/} ${BLACK}${bBLUE} ${PWD/#$HOME/\~} ${BLUE}
+    echo " ${LBLUE}❯❯ ${RESTORE}"
+    )" SELECTION; do
+      #echo "$SELECTION" >> ~/.dir_history
+      #history -n
+      history -s "$SELECTION"
+      if [[ -d ${SELECTION} ]]; then
+        cd "${SELECTION}"
+        lookFor ${DEFAULT}
+      elif [[ -f ${SELECTION} ]]; then
+        vim "${SELECTION}"
+        lookFor ${DEFAULT}
+      else
+        lookFor ${SELECTION}
+      fi
+    done
+  fi
+}
+
+function containElement {
+  local content
+  for content in "@{@:2}"; do
+    [[ "$content" == "$1" ]] && return 0;
+  done
+  return 1
+}
+
+function checkFlag {
+  echo "hi"
+  case $1 in 
+    "h" | "hidden" | "d" | "directory" | "hd" | "hiddenDirectory" | "f" | "file" | "hf" | "hiddenFile" | "a" | "all" | "n" | "fd" | "fileDirectory")
+      return 0
+    ;;
+  esac
+  return 1;
+}
+
+#function prompt {
+  #PS1=' > '
+  #echo -e "$(date +%$)" $PWD
+#}
+
+#PROMT_COMMAND='prompt'
+
+if [ -n "${1}" ] && [ $(checkFlag ${1}) ]; then
+  DEFAULT=${1}
+fi
+
+lookFor ${DEFAULT}
+history -w script_history

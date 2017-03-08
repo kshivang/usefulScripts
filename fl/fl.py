@@ -4,21 +4,26 @@ import time
 import re
 import sys
 import getpass
+import signal
 from bs4 import BeautifulSoup
+
+a = 0
 
 def liveSession( html ):
     a = 0
-    while True:
+    run = True
+    while run:
         a = a + 1
-        for i in range(50):
+        for i in range(1000):
             time.sleep(1)
-            sys.stdout.write("\r%d times refreshed! Next Refresh in %2d seconds" % (a, 50-i))
+            sys.stdout.write("\r%d times refreshed! Next Refresh in %3d seconds" % (a, 100-i))
             sys.stdout.flush()
         soup = BeautifulSoup(html, "html.parser")
         script = soup.script.string
         arrayString = re.findall('"([^"]*)"', script)
         url = arrayString[0]
         html = requests.get(url).text
+
     return
 
 
@@ -29,10 +34,10 @@ def login():
     Magic = soup.find("input", {'name': "magic"}).attrs['value']
     Tredir = soup.find("input", {'name': "4Tredir"}).attrs['value']
 
-    UserName = raw_input('IITK user name:')
-    Password = getpass.getpass('Password:')
+    # UserName = raw_input('IITK user name:')
+    # Password = getpass.getpass('Password:')
 
-    payload = {'4Tredir': Tredir, 'magic': Magic, 'username': UserName, 'password': Password }
+    payload = {'4Tredir': Tredir, 'magic': Magic, 'username': 'kshivang', 'password': 'Kuchnaya'}
 
     f = requests.post('https://gateway.iitk.ac.in:1003', data = payload);
 
@@ -43,13 +48,19 @@ def login():
         substr = 'again'
         if substr in str:
             return True
-        else:
-            return False
-    else:
-        print "Fortinet Loggined!"
-        liveSession(f.text)
-        return False
 
+    print "Fortinet Logged in!"
+    liveSession(f.text)
+    return False
+
+def signal_handler(signal, frame):
+    requests.get('https://gateway.iitk.ac.in:1003/logout?0501030a00253727')
+    print '\nYou are logged out!'
+    sys.exit(0)
+
+
+
+signal.signal(signal.SIGINT, signal_handler)
 requestLogout = requests.get('https://gateway.iitk.ac.in:1003/logout?0501030a00253727')
 time.sleep(1)
 

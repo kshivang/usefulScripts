@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
 # Print to stdout
+toSay="Start"
 re='^[0-9]+$'
 if [ -z "$1" ]; then
     read -p "Choose no. of Countdown--" x
@@ -8,16 +9,22 @@ if [ -z "$1" ]; then
        echo "error: Not a number" >&2; exit 1
     fi
 else
-    if ! [[ $1 =~ $re ]] ; then
-       echo "error: Not a number" >&2; exit 1
+    if [ "$1" == "-m" ] ; then
+        if ! [[ "$3" =~ $re ]] ; then
+           echo "error: Not a number" >&2; exit 1
+        fi
+        toSay=$2
+        x=$3
+    else
+        if ! [[ $1 =~ $re ]] ; then
+           echo "error: Not a number" >&2; exit 1
+        fi
+        x=$1
     fi
-    x=$1
 fi
 while [  $x -gt 0 ]; do
     say "$x"
-    if [  $x -eq 1 ]; then
-        say "Start"
-    fi
     let x=x-1
 done
+say "$toSay"
 exit 0

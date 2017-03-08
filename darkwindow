@@ -1,0 +1,46 @@
+#!/bin/sh
+
+INTERFACE=Wi-Fi
+
+if [[ $1 == '-s' ]]; then
+  sudo -v
+
+  while true; do
+    sudo -n true;
+    sleep 60;
+    kill -0 "$$" || exit;
+  done 2>/dev/null &
+  sudo networksetup -setsocksfirewallproxy $INTERFACE 127.0.0.1 9050 off
+  sudo networksetup -setsocksfirewallproxystate $INTERFACE on
+fi
+
+function disable_proxy() {
+  sudo networksetup -setsocksfirewallproxystate $INTERFACE off
+  echo "$(tput setaf 64)"
+  echo "SOCKS proxy disabled"
+  echo "$(tput sgr0)"
+  echo 'Darker end is now closed'
+}
+
+#echo "$(tput setaf 64)" # green
+#echo "SOCKS proxy 127.0.0.1:9050 enabled."
+echo "$(tput setaf 136)" # orange
+echo "You are entering darker side of internet ..."
+#echo "$(tput sgr0)" # color reset
+if [[ $1 == '-s' ]]; then
+  killall tor > /dev/null
+  trap disable_proxy INT
+  echo "$(tput setaf 64)" # green
+  echo "You are in darkweb now!"
+  echo "To exit just press control-C"
+  tor > /dev/null
+else
+  tor > /dev/null &
+  echo "$(tput setaf 64)" # green
+  if [[ $1 == 'chrome' ]]; then
+    open -na Google\ Chrome --args --profile-directory=Dark --proxy-server=socks5://127.0.0.1:9050 
+  else
+    open -a /Applications/Firefox.app --args -no-remote -Private-Window -P darkInternet 
+  fi
+  kill -9 $PPID
+fi
