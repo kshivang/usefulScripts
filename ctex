@@ -1,0 +1,26 @@
+#! /usr/bin/python
+
+import cloudconvert
+import sys
+import os
+
+if len(sys.argv) == 1:
+    user_input = raw_input("Enter the path your tex file: ")
+else:
+    user_input = sys.argv[1]
+
+assert os.path.exists(user_input), "I did not find the file at ," + str(user_input)
+
+api = cloudconvert.Api('K2k3iGjYBedK4BfbV1HF-JvopIBP4LHhQZk_vSlEm0yf6k1NzMKERItfPPkJrjHZo39XV-9h-4xqH10Yv5hFwA')
+ 
+print("Uploading tex file to cloud..")
+process = api.convert({
+    "inputformat": "tex",
+    "outputformat": "pdf",
+    "input": "upload",
+    "file": open(user_input, 'rb')
+})
+print("Parshing tex to pdf..")
+process.wait()
+process.download()
+print("Downloading PDF from cloud..")

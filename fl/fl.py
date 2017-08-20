@@ -16,8 +16,8 @@ def liveSession( html ):
         a = a + 1
         for i in range(1000):
             time.sleep(1)
-            sys.stdout.write("\r%d times refreshed! Next Refresh in %3d seconds" % (a, 100-i))
-            sys.stdout.flush()
+            # sys.stdout.write("\r%d times refreshed! Next Refresh in %3d seconds" % (a, 1000-i))
+            # sys.stdout.flush()
         soup = BeautifulSoup(html, "html.parser")
         script = soup.script.string
         arrayString = re.findall('"([^"]*)"', script)
@@ -29,7 +29,7 @@ def liveSession( html ):
 
 
 def login():
-    soup = BeautifulSoup(requests.get('http://google.com').text , "html.parser")
+    soup = BeautifulSoup(requests.get('http://9gag.com').text , "html.parser")
 
     Magic = soup.find("input", {'name': "magic"}).attrs['value']
     Tredir = soup.find("input", {'name': "4Tredir"}).attrs['value']
